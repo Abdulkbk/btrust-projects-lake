@@ -6,6 +6,10 @@ import (
 	"github.com/btcsuite/btcd/btcjson"
 )
 
+// displayTrxDetails prints the details of a transaction based on the specified flags.
+//
+// decodedTrx btcjson.TxRawResult, version bool, inputs bool, outputs bool, locktime bool.
+// No return value.
 func displayTrxDetails(decodedTrx btcjson.TxRawResult, version, inputs, outputs, locktime bool) {
 	fmt.Println("================================= START =================================")
 	if version {
@@ -20,5 +24,5 @@ func displayTrxDetails(decodedTrx btcjson.TxRawResult, version, inputs, outputs,
 	if locktime {
 		fmt.Printf("Locktime: %v\n", decodedTrx.LockTime)
 	}
-	fmt.Println("================================= END =================================")
+	fmt.Println("=================================  END  =================================")
 }

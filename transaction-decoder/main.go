@@ -7,6 +7,7 @@ import (
 	"transaction-decoder/bitcoin"
 )
 
+// main is the entry point of the program.
 func main() {
 	version := flag.Bool("v", false, "Show Version")
 	inputs := flag.Bool("in", false, "Show Inputs")

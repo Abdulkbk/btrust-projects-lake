@@ -10,7 +10,7 @@ import (
 func BitcoinClient() *rpcclient.Client {
 
 	connConfig := &rpcclient.ConnConfig{
-		Host:         "127.0.0.1:" + constants.REGTEST_PORT,
+		Host:         constants.BTC_HOST + ":" + constants.REGTEST_PORT,
 		User:         "user",
 		Pass:         "pass",
 		HTTPPostMode: true,
