@@ -27,7 +27,9 @@ func main() {
 	p2shAddr := ""
 	ammount := btcutil.Amount(100000)
 	sendTrx := transactionContructor(prevTxHashStr, p2shAddr, ammount)
-	TransactionSpenderConstructor(sendTrx.TxHash().String())
+	spendTrx := TransactionSpenderConstructor(sendTrx.TxHash().String(), btcutil.Amount(100000), "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t", "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t")
+
+	fmt.Println(spendTrx)
 
 }
 
