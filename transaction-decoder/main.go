@@ -24,13 +24,16 @@ func main() {
 		fmt.Println("-hex is required!")
 		return
 	}
+
 	byteString, err := hex.DecodeString(*trxHex)
+
 	if err != nil {
 		fmt.Println("Error decoding hex", err)
 		return
 	}
 
 	decodedTrx, err := bitcoinClient.DecodeRawTransaction(byteString)
+
 	if err != nil {
 		fmt.Println("Error decoding transaction", err)
 		return
