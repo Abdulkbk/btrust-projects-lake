@@ -23,10 +23,10 @@ func main() {
 
 	prevTxHashStr := "5dc27ef4b998e1b2bcb62bf53d99a83f703ff110977fc63f72194d65e280a7cb"
 	p2shAddr := "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t"
-	amount := btcutil.Amount(100000)
+	amount := btcutil.Amount(1000000)
 	sendTrx := transactionContructor(prevTxHashStr, p2shAddr, amount)
 
-	spendTrx := TransactionSpenderConstructor(sendTrx.TxHash().String(), btcutil.Amount(100000), "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t", "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t")
+	spendTrx := transactionSpenderConstructor(sendTrx.TxHash().String(), btcutil.Amount(100000), "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t", "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t")
 
 	fmt.Println(spendTrx)
 
@@ -113,7 +113,7 @@ func transactionContructor(prevTxHashStr, p2ScriptAddrStr string, amount btcutil
 
 }
 
-func TransactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amount, to, changeAddressStr string) *wire.MsgTx {
+func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amount, to, changeAddressStr string) *wire.MsgTx {
 	prevTxHash, err := chainhash.NewHashFromStr(prevTxHashStr)
 	tx := wire.NewMsgTx(wire.TxVersion)
 
