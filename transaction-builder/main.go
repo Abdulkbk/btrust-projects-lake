@@ -24,8 +24,11 @@ func main() {
 	prevTxHashStr := "5dc27ef4b998e1b2bcb62bf53d99a83f703ff110977fc63f72194d65e280a7cb"
 	p2shAddr := "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t"
 	amount := btcutil.Amount(1000000)
+
+	// Calling the transaction constructor to send bitcoin to the p2sh address created
 	sendTrx := transactionContructor(prevTxHashStr, p2shAddr, amount)
 
+	// Building a transaction to spend bitcoin from the p2sh address created
 	spendTrx := transactionSpenderConstructor(sendTrx.TxHash().String(), btcutil.Amount(100000), "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t", "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t")
 
 	fmt.Println(spendTrx)
