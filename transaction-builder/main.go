@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -15,23 +16,47 @@ import (
 func main() {
 	redeemScript := generateRedeemScript()
 
-	fmt.Println(redeemScript)
+	fmt.Println("Redeem script: ", redeemScript)
 
 	p2shAddress := generateAddressFromRedeemScript(redeemScript)
 
-	fmt.Println(p2shAddress)
+	fmt.Println("Address:", p2shAddress)
 
-	prevTxHashStr := "5dc27ef4b998e1b2bcb62bf53d99a83f703ff110977fc63f72194d65e280a7cb"
-	p2shAddr := "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t"
-	amount := btcutil.Amount(1000000)
+	// prevTxHashStr := "f54b974828be38649b8c056bca4b83d94d50417ff8660f1f27d98567f9c7da1a"
+	// p2shAddr := "2N74S7ccUsw1hn4w9NASZAgcsrcEzmf6cox" // Address gotten from the p2sh
+	// amount := btcutil.Amount(10000)
 
-	// Calling the transaction constructor to send bitcoin to the p2sh address created
-	sendTrx := transactionContructor(prevTxHashStr, p2shAddr, amount)
+	// // Calling the transaction constructor to send bitcoin to the p2sh address created
+	// sendTrx := transactionContructor(prevTxHashStr, p2shAddr, amount)
 
+	// serializedTx := new(bytes.Buffer)
+	// s := sendTrx.Serialize(serializedTx)
+
+	// hexEnc := hex.EncodeToString(serializedTx.Bytes())
+
+	// fmt.Println("Transaction :", s)
+	// fmt.Println("Transaction :", hexEnc)
+
+	// Trx hex: 01000000011adac7f96785d9271f0f66f87f41504dd9834bca6b058c9b6438be2848974bf500000000000000000001102700000000000017a91497874ed8e883a4d2a5442a95315035605c7501378700000000
+	// Trx signed hex: 01000000011adac7f96785d9271f0f66f87f41504dd9834bca6b058c9b6438be2848974bf5000000006a47304402202a2156e92252b65c8c27fc211b40c524b821833d62566120579366f8e293214a022071d599e35e9028d678b29e7e5e631baeb40bb42c71992d1c359f3c934b111f32012102be8c25ee7213c3d3a7622534e91cf1ccf0c6cc11442bfa340fbe75cf57ae7f4c0000000001102700000000000017a91497874ed8e883a4d2a5442a95315035605c7501378700000000
+	// Txid: 7a4ecf5ff85cf58df4197eec8fc7b2eedccd72dea5e09aace8ba3f2bafdac4b2
 	// Building a transaction to spend bitcoin from the p2sh address created
-	spendTrx := transactionSpenderConstructor(sendTrx.TxHash().String(), btcutil.Amount(100000), "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t", "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t")
 
-	fmt.Println(spendTrx)
+	prevTxHashStr2 := "7a4ecf5ff85cf58df4197eec8fc7b2eedccd72dea5e09aace8ba3f2bafdac4b2"
+	myP2shAddr := "2N74S7ccUsw1hn4w9NASZAgcsrcEzmf6cox"
+	myChangeAddr := "tb1qsqhkt8035ljqj53vfd3d56tdz66p7rnsgrguvh"
+
+	spendTrx := transactionSpenderConstructor(prevTxHashStr2, btcutil.Amount(9000), myP2shAddr, myChangeAddr)
+
+	serializedTx2 := new(bytes.Buffer)
+	s2 := spendTrx.Serialize(serializedTx2)
+
+	hexEnc2 := hex.EncodeToString(serializedTx2.Bytes())
+
+	fmt.Println("Transaction :", s2)
+	fmt.Println("Transaction :", hexEnc2)
+
+	// fmt.Println(spendTrx)
 
 }
 
@@ -56,10 +81,10 @@ func generateAddressFromRedeemScript(redeemScript string) btcutil.Address {
 	redeemScriptBytes := []byte(redeemScript)
 
 	// Hash the redeem script with Sha256 to give a 32 byte hash
-	hash := sha256.Sum256(redeemScriptBytes)
+	// hash := sha256.Sum256(redeemScriptBytes) -> redundant hashing
 
 	// Hash the result with RIPEMD160  to give a 20 byte hash
-	ripemd160Hash := btcutil.Hash160(hash[:])
+	ripemd160Hash := btcutil.Hash160(redeemScriptBytes)
 
 	// Append the 0x05 version prefix
 	p2shHash := append([]byte{0x05}, ripemd160Hash...)
@@ -76,45 +101,55 @@ func generateAddressFromRedeemScript(redeemScript string) btcutil.Address {
 	return p2shAddress
 }
 
-func transactionContructor(prevTxHashStr, p2ScriptAddrStr string, amount btcutil.Amount) *wire.MsgTx {
+// func transactionContructor(prevTxHashStr, p2ScriptAddrStr string, amount btcutil.Amount) *wire.MsgTx {
 
-	tx := wire.NewMsgTx(wire.TxVersion)
+// 	tx := wire.NewMsgTx(wire.TxVersion)
 
-	prevTxHash, err := chainhash.NewHashFromStr(prevTxHashStr)
+// 	prevTxHash, err := chainhash.NewHashFromStr(prevTxHashStr)
 
-	if err != nil {
-		fmt.Println("Error while decoding prev tx hash", err)
-		return tx
-	}
+// 	if err != nil {
+// 		fmt.Println("Error while decoding prev tx hash", err)
+// 		return tx
+// 	}
 
-	// Creating the input for the transaction (referencing a utxo)
-	prevTxOutPoint := wire.NewOutPoint(prevTxHash, 0)
-	txIn := wire.NewTxIn(prevTxOutPoint, nil, nil)
-	tx.AddTxIn(txIn)
+// 	// Creating the input for the transaction (referencing a utxo)
+// 	prevTxOutPoint := wire.NewOutPoint(prevTxHash, 0)
+// 	txIn := wire.NewTxIn(prevTxOutPoint, nil, nil)
+// 	tx.AddTxIn(txIn)
 
-	// p2ScriptAddrStr := "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t"
-	p2shAddress, err := btcutil.DecodeAddress(p2ScriptAddrStr, &chaincfg.SigNetParams)
+// 	// p2ScriptAddrStr := "2NEWkaQQEMGyMyFyFXdgmpo1GHN6qiPhP5t"
+// 	p2shAddress, err := btcutil.DecodeAddress(p2ScriptAddrStr, &chaincfg.SigNetParams)
 
-	if err != nil {
-		fmt.Println("Error while decoding p2sh address", err)
-		return tx
-	}
+// 	if err != nil {
+// 		fmt.Println("Error while decoding p2sh address", err)
+// 		return tx
+// 	}
 
-	//
-	script, err := txscript.PayToAddrScript(p2shAddress)
+// 	//
+// 	script, err := txscript.PayToAddrScript(p2shAddress)
 
-	if err != nil {
-		fmt.Println("Error while creating p2s script", err)
-		return tx
-	}
+// 	if err != nil {
+// 		fmt.Println("Error while creating p2s script", err)
+// 		return tx
+// 	}
 
-	txOut := wire.NewTxOut(int64(amount), script)
-	tx.AddTxOut(txOut)
+// 	txOut := wire.NewTxOut(int64(amount), script)
+// 	tx.AddTxOut(txOut)
 
-	fmt.Println(tx)
-	return tx
+// 	// Add signature
+// 	// sigScript, err := txscript.SignatureScript(tx, 0, script, txscript.SigHashAll, nil, true)
 
-}
+// 	if err != nil {
+// 		fmt.Println("Error while creating signature script", err)
+// 		return tx
+// 	}
+
+// 	// txIn.SignatureScript = sigScript
+// 	txIn.Sequence = 0
+
+// 	return tx
+
+// }
 
 func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amount, to, changeAddressStr string) *wire.MsgTx {
 	prevTxHash, err := chainhash.NewHashFromStr(prevTxHashStr)
@@ -166,14 +201,12 @@ func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amou
 	changeTxOut := wire.NewTxOut(changeAmount, changeScript)
 	tx.AddTxOut(changeTxOut)
 
-	unlockingScript, err := txscript.PayToAddrScript(mainAddress)
-
 	if err != nil {
 		fmt.Println("Error while creating unlocking script", err)
 		return tx
 	}
 
-	tx.TxIn[0].SignatureScript = unlockingScript
+	// tx.TxIn[0].SignatureScript =
 
 	// fmt.Println(tx)
 	return tx
