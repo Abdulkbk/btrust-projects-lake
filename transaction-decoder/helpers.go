@@ -16,10 +16,10 @@ func displayTrxDetails(decodedTrx btcjson.TxRawResult, version, inputs, outputs,
 		fmt.Printf("Version: %v\n", decodedTrx.Version)
 	}
 	if inputs {
-		fmt.Printf("Inputs: %v\n", decodedTrx.Vin)
+		fmt.Printf("Inputs: %v\n", len(decodedTrx.Vin))
 	}
 	if outputs {
-		fmt.Printf("Outputs: %v\n", decodedTrx.Vout)
+		fmt.Printf("Outputs: %v\n", len(decodedTrx.Vout))
 	}
 	if locktime {
 		fmt.Printf("Locktime: %v\n", decodedTrx.LockTime)

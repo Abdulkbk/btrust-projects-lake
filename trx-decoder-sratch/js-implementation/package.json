@@ -1,0 +1,14 @@
+{
+  "name": "bitcoin-trx-decoder",
+  "version": "1.0.0",
+  "description": "A transaction decoder from scratch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bitcoin"
+  ],
+  "author": "Abdulkbk",
+  "license": "ISC"
+}
