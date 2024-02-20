@@ -145,6 +145,10 @@ func transactionContructor(prevTxHashStr, p2ScriptAddrStr string, amount btcutil
 }
 
 func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amount, to, changeAddressStr string) *wire.MsgTx {
+	actualPreimage := "Btrust Builders"
+	hashedPreimage := sha256.Sum256([]byte(actualPreimage))
+	unlockingScript := hex.EncodeToString(hashedPreimage[:])
+
 	prevTxHash, err := chainhash.NewHashFromStr(prevTxHashStr)
 	tx := wire.NewMsgTx(wire.TxVersion)
 
