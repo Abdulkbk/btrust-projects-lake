@@ -149,6 +149,13 @@ func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amou
 	hashedPreimage := sha256.Sum256([]byte(actualPreimage))
 	unlockingScript := hex.EncodeToString(hashedPreimage[:])
 
+	unlockingScriptBytes, err := hex.DecodeString(unlockingScript)
+
+	if err != nil {
+		fmt.Println("Error while decoding unlocking script", err)
+		return nil
+	}
+
 	prevTxHash, err := chainhash.NewHashFromStr(prevTxHashStr)
 	tx := wire.NewMsgTx(wire.TxVersion)
 
@@ -159,7 +166,7 @@ func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amou
 
 	prevTxOutPoint := wire.NewOutPoint(prevTxHash, 0)
 
-	txIn := wire.NewTxIn(prevTxOutPoint, nil, nil)
+	txIn := wire.NewTxIn(prevTxOutPoint, unlockingScriptBytes, nil)
 	tx.AddTxIn(txIn)
 
 	mainAddress, err := btcutil.DecodeAddress(to, &chaincfg.SigNetParams)
@@ -203,8 +210,5 @@ func transactionSpenderConstructor(prevTxHashStr string, mainAmount btcutil.Amou
 		return tx
 	}
 
-	// tx.TxIn[0].SignatureScript =
-
-	// fmt.Println(tx)
 	return tx
 }
