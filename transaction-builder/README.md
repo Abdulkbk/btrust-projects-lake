@@ -11,3 +11,10 @@ The transaction builder is implemented using golang. It takes a byte encoding of
 - `transactionContructor`: This takes reference to utxo, amount, and other necessary parameters to construct a transaction.
 
 - `transactionSpenderConstructor`: This function takes some parameters and construct a transaction based on the previous transaction gotten from `transactionContructor` function.
+
+### Installation
+- Install Go on your machine.
+- Clone this repository
+- Navigate to the repository: cd transaction-builder
+- Run go get to install the required dependencies.
+- Run the application: go run main.go
